@@ -8,17 +8,17 @@ $(NAME): all
 # コンテナ起動 バックグラウンド
 .PHONY: all
 all:
-	docker-compose -p $(NAME) up -d
+	docker compose -p $(NAME) up -d
 
 # コンテナ起動 フォアグラウンド(ログを見たいとき)
 .PHONY: up-logs
 up-logs:
-	docker-compose -p $(NAME) up
+	docker compose -p $(NAME) up
 
 # コンテナを停止
 .PHONY: stop
 stop:
-	docker-compose -p $(NAME) stop
+	docker compose -p $(NAME) stop
 
 # コンテナ、イメージ、ボリューム、ネットワークを削除
 .PHONY: fclean
@@ -31,22 +31,22 @@ re: fclean all
 # イメージを構築
 .PHONY: build
 build:
-	docker-compose -p $(NAME) build
+	docker compose -p $(NAME) build
 
 # キャッシュを使わずにイメージを構築
 .PHONY: ncbuild
 ncbuild:
-	docker-compose -p $(NAME) build --no-cache
+	docker compose -p $(NAME) build --no-cache
 
 # イメージを構築（詳細なプログレス情報を表示）
 .PHONY: build-verbose
 build-verbose:
-	docker-compose -p $(NAME) build --progress=plain
+	docker compose -p $(NAME) build --progress=plain
 
 # キャッシュを使わずにイメージを構築（詳細なプログレス情報を表示）
 .PHONY: ncbuild-verbose
 ncbuild-verbose:
-	docker-compose -p $(NAME) build --no-cache --progress=plain
+	docker compose -p $(NAME) build --no-cache --progress=plain
 
 # ホストのDocker環境をクリーンにする
 .PHONY: all-clean-docker
