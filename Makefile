@@ -54,13 +54,17 @@ re: fclean all
 # モックを使ったテスト
 .PHONY: test-mock
 test-mock:
-	docker compose -p $(NAME) exec -T app go test -v -cover -tags=mock ./...
+	- cd app && richgo test -v -cover -tags=mock ./...
 
 # コンテナ起動が必要な統合テスト
 .PHONY: test-integration
 test-integration: all
-	- docker compose -p $(NAME) exec app go test -v -cover ./...
+	- docker compose -p $(NAME) exec app richgo test -v -cover -tags=integration ./...
 	$(MAKE) clean-volumes
+
+# テスト (モックを使ったテストと統合テスト)
+.PHONY: test
+test: test-mock test-integration
 
 # イメージを構築
 .PHONY: build

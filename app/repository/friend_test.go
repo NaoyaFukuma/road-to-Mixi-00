@@ -32,7 +32,7 @@ func TestGetFriends(t *testing.T) {
 				rows := sqlmock.NewRows([]string{"id", "name"}).
 					AddRow(1, "Alice").
 					AddRow(2, "Bob")
-				mock.ExpectQuery("^SELECT f.id, f.name FROM users AS f JOIN friend_link AS fl ON f.user_id = fl.user2_id WHERE fl.user1_id = \\?$").
+				mock.ExpectQuery("^SELECT u.id, u.name FROM users AS u JOIN friend_link AS fl ON u.id = fl.user2_id WHERE fl.user1_id = \\?$").
 					WithArgs(1).
 					WillReturnRows(rows)
 			},

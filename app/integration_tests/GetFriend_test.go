@@ -1,4 +1,6 @@
-package main_test
+//go:build integration
+
+package integrationtests
 
 import (
 	"database/sql"
