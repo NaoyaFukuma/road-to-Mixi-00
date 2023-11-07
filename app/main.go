@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"minimal_sns_app/configs"
+	"minimal_sns_app/repository"
 	"net/http"
 	"strconv"
 
@@ -22,13 +23,26 @@ func main() {
 
 	e := echo.New()
 
+	// Inject the repository int the handler.
+	friendRepository := repository.NewFriendRepository(db)
+
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "minimal_sns_app")
 	})
 
 	e.GET("/get_friend_list", func(c echo.Context) error {
-		// FIXME
-		return nil
+		userIDParam := c.QueryParam("user_id")
+		userID, err := strconv.ParseInt(userIDParam, 10, 64)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, "invalid user_id")
+		}
+
+		friends, err := friendRepository.GetFriends(userID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "failed to get friends")
+		}
+
+		return c.JSON(http.StatusOK, friends)
 	})
 
 	e.GET("/get_friend_of_friend_list", func(c echo.Context) error {
