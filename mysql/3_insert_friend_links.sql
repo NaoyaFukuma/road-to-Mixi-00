@@ -498,4 +498,4 @@ INSERT INTO friend_link (user1_id, user2_id) VALUES
 (100, 81),
 (100, 80),
 (100, 48),
-(100, 25),
+(100, 25);
