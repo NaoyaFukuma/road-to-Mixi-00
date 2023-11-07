@@ -3,8 +3,8 @@ package main
 import (
 	"database/sql"
 	"minimal_sns_app/configs"
+	"minimal_sns_app/handlers"
 	"minimal_sns_app/repository"
-	"net/http"
 	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -12,48 +12,26 @@ import (
 )
 
 func main() {
-	print("hello")
+	// アプリケーション設定のロード
 	conf := configs.Get()
 
+	// データベース接続のセットアップ
 	db, err := sql.Open(conf.DB.Driver, conf.DB.DataSource)
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
 
+	// Echo インスタンスの作成
 	e := echo.New()
 
-	// Inject the repository int the handler.
-	friendRepository := repository.NewFriendRepository(db)
+	// レポジトリとハンドラの作成
+	friendRepo := repository.NewFriendRepository(db)
+	friendHandler := handlers.NewFriendHandler(friendRepo)
 
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "minimal_sns_app")
-	})
+	// ハンドラにルートを登録させる
+	friendHandler.RegisterRoutes(e)
 
-	e.GET("/get_friend_list", func(c echo.Context) error {
-		userIDParam := c.QueryParam("user_id")
-		userID, err := strconv.ParseInt(userIDParam, 10, 64)
-		if err != nil {
-			return echo.NewHTTPError(http.StatusBadRequest, "invalid user_id")
-		}
-
-		friends, err := friendRepository.GetFriends(userID)
-		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, "failed to get friends")
-		}
-
-		return c.JSON(http.StatusOK, friends)
-	})
-
-	e.GET("/get_friend_of_friend_list", func(c echo.Context) error {
-		// FIXME
-		return nil
-	})
-
-	e.GET("/get_friend_of_friend_list_paging", func(c echo.Context) error {
-		// FIXME
-		return nil
-	})
-
+	// サーバーの起動
 	e.Logger.Fatal(e.Start(":" + strconv.Itoa(conf.Server.Port)))
 }

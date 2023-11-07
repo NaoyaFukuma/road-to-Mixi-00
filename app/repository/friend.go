@@ -24,8 +24,8 @@ func NewFriendRepository(db *sql.DB) FriendRepository {
 // GetFriends retrieves a list of friends for a given user ID.
 func (r *friendRepository) GetFriends(userID int64) ([]models.Friend, error) {
 	var friends []models.Friend
-	query := `SELECT f.id, f.name FROM users AS f
-			JOIN friend_link AS fl ON f.user_id = fl.user2_id
+	query := `SELECT u.id, u.name FROM users AS u
+			JOIN friend_link AS fl ON u.id = fl.user2_id
 			WHERE fl.user1_id = ?`
 
 	rows, err := r.db.Query(query, userID)
