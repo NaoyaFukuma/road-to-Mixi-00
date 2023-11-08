@@ -1,5 +1,5 @@
-INSERT INTO users (id, name) VALUES
-(1, 'User1'),
-(2, 'User2'),
-(3, 'User3'),
-(4, 'User4');
+INSERT INTO users (name) VALUES
+('User1'),
+('User2'),
+('User3'),
+('User4');

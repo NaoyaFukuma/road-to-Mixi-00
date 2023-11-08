@@ -20,8 +20,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// TestGet2HopsFriendsIntegration tests the Get2hopsFriends endpoint.
-func TestGet2HopsFriendsIntegration(t *testing.T) {
+// TestGetFriendOfFriendListIntegration tests the GetFriendOfFriendList endpoint.
+func TestGetFriendOfFriendListIntegration(t *testing.T) {
 	logutils.InitLog()
 	// テスト用の設定をロード
 	conf := configs.Get()
@@ -48,7 +48,7 @@ func TestGet2HopsFriendsIntegration(t *testing.T) {
 	friendHandler := handlers.NewFriendHandler(friendRepo)
 
 	// ルートを登録
-	e.GET("/get_friend_of_friend_list", friendHandler.Get2hopsFriends)
+	e.GET("/get_friend_of_friend_list", friendHandler.GetFriendOfFriendList)
 
 	// テスト用のサーバーを設定
 	ts := httptest.NewServer(e)
