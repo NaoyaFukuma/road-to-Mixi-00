@@ -20,9 +20,6 @@ up-logs:
 stop:
 	docker compose -p $(NAME) stop
 
-# プロジェクト名を定義
-NAME := minimal_sns_app
-
 # プログラムに関連するコンテナだけを停止し削除
 .PHONY: clean-containers
 clean-containers:
@@ -47,24 +44,24 @@ clean-networks:
 .PHONY: fclean
 fclean: clean-containers clean-images clean-volumes clean-networks
 
+# コンテナ、イメージ、ボリューム、ネットワークの状態を表示
+.PHONY: status
+status:
+	docker compose -p $(NAME) ps
+	docker images
+	docker volume ls
+	docker network ls
+	
 # コンテナを再構築
 .PHONY: re
 re: fclean all
 
-# モックを使ったテスト
-.PHONY: test-mock
-test-mock:
-	- cd app && richgo test -v -cover -tags=mock ./...
-
-# コンテナ起動が必要な統合テスト
-.PHONY: test-integration
-test-integration: all
-	- docker compose -p $(NAME) exec app richgo test -v -cover -tags=integration ./...
+# コンテナ起動してテストを実行
+.PHONY:
+test: all
+	- docker compose -p $(NAME) exec app richgo test -v -cover ./...
 	$(MAKE) clean-volumes
 
-# テスト (モックを使ったテストと統合テスト)
-.PHONY: test
-test: test-mock test-integration
 
 # イメージを構築
 .PHONY: build
