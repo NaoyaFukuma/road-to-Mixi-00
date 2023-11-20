@@ -8,32 +8,32 @@ $(NAME): all
 # コンテナ起動 バックグラウンド
 .PHONY: all
 all:
-	docker compose -p $(NAME) up -d
+	docker-compose -p $(NAME) up -d
 
 # コンテナ起動 フォアグラウンド(ログを見たいとき)
 .PHONY: up-logs
 up-logs:
-	docker compose -p $(NAME) up
+	docker-compose -p $(NAME) up
 
 # コンテナを停止
 .PHONY: stop
 stop:
-	docker compose -p $(NAME) stop
+	docker-compose -p $(NAME) stop
 
 # プログラムに関連するコンテナだけを停止し削除
 .PHONY: clean-containers
 clean-containers:
-	docker compose -p $(NAME) down --remove-orphans
+	docker-compose -p $(NAME) down --remove-orphans
 
 # プロジェクトに関連するコンテナとイメージを削除
 .PHONY: clean-images
 clean-images:
-	docker compose -p $(NAME) down --rmi local
+	docker-compose -p $(NAME) down --rmi local
 
 # プロジェクトに関連するコンテナとボリュームを削除
 .PHONY: clean-volumes
 clean-volumes:
-	docker compose -p $(NAME) down -v --remove-orphans
+	docker-compose -p $(NAME) down -v --remove-orphans
 
 # プロジェクトに関連するネットワークだけを削除
 .PHONY: clean-networks
@@ -47,7 +47,7 @@ fclean: clean-containers clean-images clean-volumes clean-networks
 # コンテナ、イメージ、ボリューム、ネットワークの状態を表示
 .PHONY: status
 status:
-	docker compose -p $(NAME) ps
+	docker-compose -p $(NAME) ps
 	docker images
 	docker volume ls
 	docker network ls
@@ -59,29 +59,29 @@ re: fclean all
 # コンテナ起動してテストを実行
 .PHONY:
 test: all
-	- docker compose -p $(NAME) exec app richgo test -v -cover ./...
+	- docker-compose -p $(NAME) exec app richgo test -v -cover ./...
 	$(MAKE) clean-volumes
 
 
 # イメージを構築
 .PHONY: build
 build:
-	docker compose -p $(NAME) build
+	docker-compose -p $(NAME) build
 
 # キャッシュを使わずにイメージを構築
 .PHONY: ncbuild
 ncbuild:
-	docker compose -p $(NAME) build --no-cache
+	docker-compose -p $(NAME) build --no-cache
 
 # イメージを構築（詳細なプログレス情報を表示）
 .PHONY: build-verbose
 build-verbose:
-	docker compose -p $(NAME) build --progress=plain
+	docker-compose -p $(NAME) build --progress=plain
 
 # キャッシュを使わずにイメージを構築（詳細なプログレス情報を表示）
 .PHONY: ncbuild-verbose
 ncbuild-verbose:
-	docker compose -p $(NAME) build --no-cache --progress=plain
+	docker-compose -p $(NAME) build --no-cache --progress=plain
 
 # ホストのDocker環境をクリーンにする
 .PHONY: all-clean-docker

@@ -47,7 +47,7 @@ services:
       # - ./mysql/2_insert_users.sql:/docker-entrypoint-initdb.d/2_insert_users.sql
       # - ./mysql/3_insert_friend_block.sql:/docker-entrypoint-initdb.d/3_insert_friend_block.sql
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: app
       TZ: "Asia/Tokyo"
     healthcheck:

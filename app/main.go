@@ -27,8 +27,11 @@ func main() {
 
 	friendRepo := repository.NewFriendRepository(db)
 	friendHandler := handlers.NewFriendHandler(friendRepo)
+	userRepo := repository.NewUserRepository(db)
+	userHandler := handlers.NewUserHandler(userRepo)
 
 	friendHandler.RegisterRoutes(e)
+	userHandler.RegisterRoutes(e)
 
 	e.Logger.Fatal(e.Start(":" + strconv.Itoa(conf.Server.Port)))
 }
